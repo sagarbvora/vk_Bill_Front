@@ -1,0 +1,19 @@
+.billing{
+  .remove-btn{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+  .ant-row{
+    .ant-input-number{
+      width: 100%;
+    }
+    .ant-form-item-control-input-content{
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  .ant-divider-with-text{
+    border-top-color: rgb(65 59 59 / 72%);
+  }
+}
