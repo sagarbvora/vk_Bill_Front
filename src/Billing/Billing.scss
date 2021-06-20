@@ -17,3 +17,100 @@
     border-top-color: rgb(65 59 59 / 72%);
   }
 }
+
+//final---->
+
+.final-print{
+  .card{
+    border: 1px solid black;
+    border-radius: unset;
+    .card-body{
+      padding-left: 12px !important;
+      padding-right: 12px !important;
+      .bill-header{
+        border-bottom: 1px solid #999898;
+        .logo{
+          border-right: 1px solid #dee2e6;
+          margin-bottom: 35px;
+        }
+        .content{
+          text-align: center;
+          text-transform:uppercase;
+          .heading-vk{
+            letter-spacing: 2px;
+          }
+        }
+      }
+      .invoice{
+        border-bottom: 1px solid #999898;
+        background: azure;
+      }
+      .customer-details{
+        border-bottom: 1px solid black;
+        .bill-to{
+          border-right: 1px solid #999898;
+        }
+      }
+      .product-details{
+        //border-bottom: 1px solid #999898;
+        .col-md-12{
+          padding-left: 0 !important;
+          padding-right: 0 !important;
+          .total{
+            display: flex;
+            justify-content: space-between;
+            padding: 0 7px;
+            border-bottom: 1px solid black;
+          }
+          table{
+            min-height: 300px;
+            thead{
+              background: azure;
+              tr{
+                text-align: center;
+              }
+            }
+            th:nth-child(2){
+              width: 320px;
+            }
+            td{
+              text-align: end;
+            }
+            td:nth-child(2){
+              text-align: unset;
+            }
+            th, td{
+              border-right: 1px solid #999898;
+              &:last-child{
+                border-right: unset;
+              }
+            }
+            .back-logo{
+              position: absolute;
+              top: 67%;
+              left: 41%;
+              opacity: 0.1;
+            }
+            tbody{
+              border-bottom: 1px solid #999898;
+              position: relative;
+              //background-image: url("../assert/images/logo.png");
+              //background-repeat: no-repeat;
+              //background-size: 100px 100px;
+              //background-attachment: fixed;
+              //background-position: 50px 150px;
+            }
+          }
+        }
+
+        //.col-sm-12{
+        //  border-right: 1px solid #999898;
+        //  label{
+        //    font-weight: bold;
+        //    border-bottom: 1px solid #999898;
+        //  }
+        //}
+      }
+    }
+  }
+}

@@ -80,7 +80,12 @@ const BillCreate = () =>{
         axios.post("http://localhost:8000/billing/create", customer,  {headers: {Accept: 'application/json', 'Content-Type': 'application/json'}}).then(res =>{
             if (res.status === 200) {
                 console.log("Success");
-                // history.push("/");
+                setCustomer({});
+                setProduct(initArray);
+                history.push({
+                    pathname: "/final_print",
+                    state: {id: res && res.data._id}
+                });
             }
         }).catch(err =>{
             console.log("Error", err);
