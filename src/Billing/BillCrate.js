@@ -9,14 +9,13 @@ import "./Billing.scss";
 const initArray  = [{
     description: "",
     quantity: null,
-    rate: null,
-    amount: null
+    rate: null
 }];
 const BillCreate = () =>{
     const [customer, setCustomer] = useState({
         name: "",
         address: "",
-        createDate: ""
+        date: ""
     });
     const [productData, setProduct] = useState(initArray);
     const history = useHistory();
@@ -32,14 +31,23 @@ const BillCreate = () =>{
 
     const onChange = (index,name,event)=>{
         let tempArray = [...productData];
-        tempArray[index] = {...tempArray[index], [name]:event.target.value};
+        if (name === "rate") {
+            let value = (event.target.value || "").toString()
+            let lastThree = value.substring(value.length-3);
+            var otherNumbers = value.substring(0, value.length-3);
+            if(otherNumbers !== '')
+            lastThree = ',' + lastThree;
+            tempArray[index] = {...tempArray[index], [name]:otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree};
+        } else {
+            tempArray[index] = {...tempArray[index], [name]:event.target.value};
+        }
         return setProduct(tempArray)
     };
     const handleChange = (e, date, dateString) =>{
         const { name, value } = e.target;
         setCustomer({
             ...customer,
-            [name]: name === "createDate" ? dateString : value
+            [name]: name === "date" ? dateString : value
         })
     };
     const productDataItems = productData.map((item,index)=>{
@@ -63,12 +71,6 @@ const BillCreate = () =>{
                     <InputNumber name="rate"
                                  onChange={(value)=>onChange(index,'rate',{target:{name: "rate", value}})}/></Form.Item>
             </Col>
-            <Col span={24}>
-                <label><b>Amount</b></label>
-                <Form.Item name={['productData',index,'amount']}>
-                    <InputNumber name="amount"
-                                 onChange={(value)=>onChange(index,'amount',{target:{name: "amount", value}})}/></Form.Item>
-            </Col>
             {(index > 0) && <Col span={24} className="remove-btn">
                 <Button type="primary" onClick={()=>del(index)}><MinusOutlined /></Button>
             </Col>}
@@ -83,7 +85,7 @@ const BillCreate = () =>{
                 setCustomer({});
                 setProduct(initArray);
                 history.push({
-                    pathname: "/final_print",
+                    pathname: `/final_print/${res && res.data._id}`,
                     state: {id: res && res.data._id}
                 });
             }
@@ -112,10 +114,10 @@ const BillCreate = () =>{
                         <label>Start Date</label>
                         <Form.Item>
                             <DatePicker className="w-100"
-                                        name="createDate"
-                                        value={customer && customer.createDate && moment(customer.createDate, "DD-MM-YYYY")}
+                                        name="date"
+                                        value={customer && customer.date && moment(customer.date, "DD-MM-YYYY")}
                                         format="DD-MM-YYYY"
-                                        onChange={(date, dateString) =>handleChange({target: {name: "createDate"}}, date, dateString)}
+                                        onChange={(date, dateString) =>handleChange({target: {name: "date"}}, date, dateString)}
                             />
                         </Form.Item>
                     </div>

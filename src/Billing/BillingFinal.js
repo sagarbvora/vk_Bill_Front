@@ -1,129 +1,52 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import axios from "axios";
+import ReactToPrint from 'react-to-print';
 import LOGO from "../assert/images/logo.png";
+import {useReactToPrint} from "react-to-print";
+import { PrinterOutlined } from '@ant-design/icons';
 import "./Billing.scss";
+import BillingPage from "./BillingPage";
 const BillingFront = (props) =>{
     const [getDetails, setDetails] = useState({});
+    const [total, setTotal] = useState(null);
+    const componentRef = useRef();
     useEffect(() =>{
-        const id = props && props.location && props.location.state && props.location.state.id;
+        const id = props && props.match.params.id;
         if (id) {
             getCustomerDetails(id)
         }
     },[]);
     const getCustomerDetails = async (id) =>{
-       await axios.get(`http://localhost:8000/billing/getDetails/${id}`,  {headers: {Accept: 'application/json', 'Content-Type': 'application/json'}}).then(res =>{
+       await axios.get(`http://localhost:8000/billing/getDetails/${id}`,
+           {headers: {Accept: 'application/json', 'Content-Type': 'application/json'}}).then(res =>{
+               console.log(res);
             if (res.status === 200) {
                 setDetails(res.data);
+                let count = 0;
+                res && res.data && res.data.productDetails.length && res.data.productDetails.forEach((item) =>{
+                    const numRate = Number((item && item.rate.split(",")).join(""));
+                    return count += (item.quantity * numRate);
+                });
+                let value = (count || "").toString();
+                let lastThree = value.substring(value.length-3);
+                var otherNumbers = value.substring(0, value.length-3);
+                if(otherNumbers !== '')
+                    lastThree = ',' + lastThree;
+                setTotal(otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree);
             }
         }).catch(err =>{
             console.log("Error", err);
         })
     };
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    });
     return(
-        <div className="final-print row d-flex justify-content-center mt-3">
-            <div className="col-sm-8">
-                <div className="card">
-                    <div className="card-body">
-                        <div className="row bill-header">
-                            <div className="col-sm-2 col-md-2 logo">
-                                <img src={LOGO} alt="logo" height="71"/>
-                            </div>
-                            <div className="content col-sm-10 col-md-10 justify-content-center">
-                                <h4 className="heading-vk">VK-ENTERPRISE</h4>
-                                <p>Shop No. 1, Dan Ashish Soc., Gate No.3, Chikuwadi Road, Katargam, Surat-395004</p>
-                                <p><b>Contact Us : 87806 30940</b></p>
-                            </div>
-                        </div>
-                        <div className="row invoice">
-                            <div className="col-sm-12 col-md-12 text-center">
-                               <span>RETAIL INVOICE</span>
-                            </div>
-                        </div>
-                        <div className="row customer-details">
-                            <div className="col-sm-12 col-md-6 bill-to">
-                                <h6>BILL TO</h6>
-                                <p><b>Kunal Vora</b></p>
-                                <div className="row">
-                                    <div className="col-md-3">
-                                        <span>Address:</span>
-                                    </div>
-                                    <div className="col-md-9">
-                                        <span>Shop No. 1, Dan Ashish Soc., Gate No.3, Chikuwadi Road, Katargam, Surat-395004</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-6">
-                                <h6>SHIP TO</h6>
-                                <p><b>{getDetails && getDetails.name || "-" }</b></p>
-                                <div className="row">
-                                    <div className="col-md-3">
-                                        <span>Address:</span>
-                                    </div>
-                                    <div className="col-md-9">
-                                        <span>{getDetails && getDetails.address || "-"}</span>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-3">
-                                        <span>Date:</span>
-                                    </div>
-                                    <div className="col-md-9">
-                                        <span>{getDetails && getDetails.date || "-"}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row product-details">
-                            {/*<div className="col-sm-12 col-md-1">*/}
-                            {/*    <label>S.No.</label>*/}
-                            {/*    <p>1</p>*/}
-                            {/*</div>*/}
-                            {/*<div className="col-sm-12 col-md-5">*/}
-                            {/*    <label>ITEMS</label>*/}
-                            {/*    <p>A.C</p>*/}
-                            {/*</div>*/}
-                            {/*<div className="col-sm-12 col-md-2">*/}
-                            {/*    <label>QUANTITY</label>*/}
-                            {/*    <p>1</p>*/}
-                            {/*</div>*/}
-                            {/*<div className="col-sm-12 col-md-2">*/}
-                            {/*    <label>RATE</label>*/}
-                            {/*    <p>45000</p>*/}
-                            {/*</div>*/}
-                            {/*<div className="col-sm-12 col-md-2">*/}
-                            {/*    <label>AMOUNT</label>*/}
-                            {/*    <p>45000</p>*/}
-                            {/*</div>*/}
-
-
-                            <div className="col-md-12">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No.</th>
-                                            <th>ITEMS</th>
-                                            <th>QUANTITY</th>
-                                            <th>RATE</th>
-                                            <th>AMOUNT</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>A.C</td>
-                                            <td>1</td>
-                                            <td>40000</td>
-                                            <td>40000</td>
-                                        </tr>
-                                    </tbody>
-                                    <img src={LOGO} alt="logo" className="back-logo" height="100" width="150"/>
-                                </table>
-                                <div className="total"><span><b>TOTAL</b></span><span>40000</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div>
+            <div className="print mb-2" align="end">
+                <button className="btn btn-primary" onClick={handlePrint}><PrinterOutlined style={{fontSize: '18px', paddingRight: "10px"}} />Print</button>
             </div>
+            <BillingPage ref={componentRef} getDetails={getDetails} total={total}/>
         </div>
     )
 };

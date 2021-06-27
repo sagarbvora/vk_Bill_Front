@@ -61,9 +61,13 @@
             justify-content: space-between;
             padding: 0 7px;
             border-bottom: 1px solid black;
+            border-top: 1px solid black;
           }
-          table{
-            min-height: 300px;
+          .terms-condition{
+            padding: 0 7px;
+          }
+          .table{
+            margin-bottom: 0;
             thead{
               background: azure;
               tr{
@@ -87,29 +91,23 @@
             }
             .back-logo{
               position: absolute;
-              top: 67%;
+              top: 53%;
               left: 41%;
               opacity: 0.1;
             }
             tbody{
-              border-bottom: 1px solid #999898;
               position: relative;
-              //background-image: url("../assert/images/logo.png");
-              //background-repeat: no-repeat;
-              //background-size: 100px 100px;
-              //background-attachment: fixed;
-              //background-position: 50px 150px;
+              tr:last-child{
+                height: 280px !important;
+              }
+              tr{
+                td{
+                  border-bottom: unset;
+                }
+              }
             }
           }
         }
-
-        //.col-sm-12{
-        //  border-right: 1px solid #999898;
-        //  label{
-        //    font-weight: bold;
-        //    border-bottom: 1px solid #999898;
-        //  }
-        //}
       }
     }
   }
