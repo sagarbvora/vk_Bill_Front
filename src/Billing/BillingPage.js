@@ -9,7 +9,7 @@ class BillingPage extends React.Component {
     render() {
         const {getDetails, total} = this.props;
         return(
-            <div className="final-print row d-flex justify-content-center mt-3">
+            <div className="final-print row d-flex justify-content-center mt-3" ref={this.props.ref}>
                 <div className="col-sm-8">
                     <div className="card">
                         <div className="card-body">
