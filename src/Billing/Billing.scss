@@ -21,6 +21,7 @@
 //final---->
 
 .final-print{
+  width: 100%;
   .card{
     border: 1px solid black;
     border-radius: unset;
@@ -95,12 +96,16 @@
               left: 41%;
               opacity: 0.1;
             }
+
             tbody{
               position: relative;
               tr:last-child{
-                height: 280px !important;
+                height: 360px !important;
               }
               tr{
+                div{
+                  min-height: 400px;
+                }
                 td{
                   border-bottom: unset;
                 }
