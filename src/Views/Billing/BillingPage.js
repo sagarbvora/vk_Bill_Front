@@ -1,5 +1,5 @@
 import React from "react";
-import LOGO from "../assert/images/logo.png";
+import LOGO from "../../assert/images/logo.png";
 
 class BillingPage extends React.Component {
     constructor(props){

@@ -2,8 +2,9 @@ import React, {useState} from "react";
 import { Form, Input, InputNumber, Button, Row, Col, Divider,DatePicker } from 'antd';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { useHistory } from "react-router-dom";
-import axios from "axios";
 import moment from "moment";
+import {apiClient} from "../../api/general";
+import {API_URL} from "../../api/config";
 import "./Billing.scss";
 
 const initArray  = [{
@@ -32,7 +33,7 @@ const BillCreate = () =>{
     const onChange = (index,name,event)=>{
         let tempArray = [...productData];
         if (name === "rate") {
-            let value = (event.target.value || "").toString()
+            let value = (event.target.value || "").toString();
             let lastThree = value.substring(value.length-3);
             var otherNumbers = value.substring(0, value.length-3);
             if(otherNumbers !== '')
@@ -79,19 +80,26 @@ const BillCreate = () =>{
 
     const submitForm = () =>{
         customer.productDetails = productData || [];
-        axios.post("http://localhost:8000/billing/create", customer,  {headers: {Accept: 'application/json', 'Content-Type': 'application/json'}}).then(res =>{
-            if (res.status === 200) {
+        const token = localStorage.getItem('token');
+        const headers = { Authorization: token ? `Bearer ${token}` : undefined };
+        apiClient({
+            method: 'POST',
+            url: `${API_URL.billing.createBill}`,
+            data: customer,
+            headers,
+        }).then(res =>{
+            if (res) {
                 console.log("Success");
                 setCustomer({});
                 setProduct(initArray);
                 history.push({
-                    pathname: `/final_print/${res && res.data._id}`,
-                    state: {id: res && res.data._id}
+                    pathname: `/final_print/${res && res._id}`,
+                    state: {id: res && res._id}
                 });
             }
-        }).catch(err =>{
-            console.log("Error", err);
-        })
+        }).catch(e =>{
+            console.log("Error", e);
+        });
     };
 
     return (

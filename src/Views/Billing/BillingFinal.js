@@ -1,9 +1,9 @@
 import React, {useState, useEffect, useCallback, useRef } from 'react';
-import axios from "axios";
-import { PrinterOutlined } from '@ant-design/icons';
 import { jsPDF } from "jspdf";
-import { toPng, toJpeg, toCanvas } from 'html-to-image';
-import LOGO from "../assert/images/logo.png";
+import { toCanvas } from 'html-to-image';
+import LOGO from "../../assert/images/logo.png";
+import {apiClient} from "../../api/general";
+import {API_URL} from "../../api/config";
 import "./Billing.scss";
 
 const BillingFront = (props) =>{
@@ -16,14 +16,19 @@ const BillingFront = (props) =>{
             getCustomerDetails(id)
         }
     },[]);
-    const getCustomerDetails = async (id) =>{
-       await axios.get(`http://localhost:8000/billing/getDetails/${id}`,
-           {headers: {Accept: 'application/json', 'Content-Type': 'application/json'}}).then(res =>{
-               console.log(res);
-            if (res.status === 200) {
-                setDetails(res.data);
+    const getCustomerDetails = (id) =>{
+        const token = localStorage.getItem('token');
+        const headers = { Authorization: token ? `Bearer ${token}` : undefined };
+        apiClient({
+            method: 'GET',
+            url: `${API_URL.billing.getUserBill}/`+ id,
+            data: {},
+            headers,
+        }).then(res =>{
+            if (res) {
+                setDetails(res);
                 let count = 0;
-                res && res.data && res.data.productDetails.length && res.data.productDetails.forEach((item) =>{
+                res && res.productDetails.length && res.productDetails.forEach((item) =>{
                     const numRate = Number((item && item.rate.split(",")).join(""));
                     return count += (item.quantity * numRate);
                 });
@@ -34,9 +39,9 @@ const BillingFront = (props) =>{
                     lastThree = ',' + lastThree;
                 setTotal(otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree);
             }
-        }).catch(err =>{
-            console.log("Error", err);
-        })
+        }).catch(e =>{
+            console.log("Error", e);
+        });
     };
      const onButtonClick = useCallback(() => {
         if (ref.current === null) {
