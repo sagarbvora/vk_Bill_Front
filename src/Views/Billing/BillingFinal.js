@@ -6,7 +6,7 @@ import {apiClient} from "../../api/general";
 import {API_URL} from "../../api/config";
 import "./Billing.scss";
 
-const BillingFront = (props) =>{
+const BillingFinalPrint = (props) =>{
     const [getDetails, setDetails] = useState({});
     const [total, setTotal] = useState(null);
     const ref = useRef(null);
@@ -181,4 +181,4 @@ const BillingFront = (props) =>{
         </div>
     )
 };
-export default BillingFront;
+export default BillingFinalPrint;
